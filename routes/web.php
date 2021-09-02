@@ -3,12 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\RequestException;
 use DiDom\Document;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -91,9 +89,7 @@ Route::get('/urls/{id}', function ($id) {
     return view('url', ['url' => $url, 'urlCheck' => $urlCheck, 'flash' => $flash]);
 })->name('url.show');
 
-Route::post('/urls/{id}/checks', function (Request $request) {
-    $params = $request->all();
-    $id = $params['id'];
+Route::post('/urls/{id}/checks', function ($id) {
     $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
     $created ?? $created = Carbon::now();
@@ -121,6 +117,6 @@ Route::post('/urls/{id}/checks', function (Request $request) {
             'updated_at' => $updated
         ]
     );
-    $request->session()->flash('status', 'Страница успешно проверена');
+    session()->flash('status', 'Страница успешно проверена');
     return redirect()->route('url.show', ['id' => $id]);
 })->name('urlChecks.store');
