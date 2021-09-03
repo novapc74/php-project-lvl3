@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1630655658">
-  <project timestamp="1630655658">
+<coverage generated="1630670620">
+  <project timestamp="1630670620">
     <file name="/home/novapc74/php-project-lvl3/app/Console/Kernel.php">
       <class name="App\Console\Kernel" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="3" elements="6" coveredelements="4"/>
