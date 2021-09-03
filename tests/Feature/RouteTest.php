@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RouteTest extends TestCase
 {
@@ -17,12 +17,12 @@ class RouteTest extends TestCase
         parent::setUp();
         $created_at = now();
         $updated_at = $created_at;
-        $urlData = [
+        $this->urlData = [
             'name' => 'https://www.test.com',
             'created_at' => $created_at,
             'updated_at' => $updated_at,
         ];
-        $this->id = DB::table('urls')->insertGetId($urlData);
+        $this->id = DB::table('urls')->insertGetId($this->urlData);
     }
 
     public function testUrlsIndex(): void
@@ -33,13 +33,10 @@ class RouteTest extends TestCase
 
     public function testUrlsStore(): void
     {
-        $urlData = [
-            'name' => 'https://www.test.com',
-        ];
-        $response = $this->post(route('urls.store', ['url' => $urlData]));
+        $response = $this->post(route('urls.store', ['url' => $this->urlData]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseHas('urls', $urlData);
+        $this->assertDatabaseHas('urls', $this->urlData);
     }
 
     public function testUrlsShow(): void
