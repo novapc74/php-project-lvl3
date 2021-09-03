@@ -21,8 +21,8 @@ Route::post('/urls', function (Request $request) {
         'required' => 'Некорректный URL',
         'max' => 'Длина URL не должна превышать 255 символов.',
     ];
-    $validator = Validator::make($params['url'], [
-        'name' => 'required|max:255',
+    $validator = Validator::make($params["url"], [
+        "name" => "required|max:255",
     ], $messages);
 
     if ($validator->fails()) {
