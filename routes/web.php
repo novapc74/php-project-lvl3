@@ -37,15 +37,14 @@ Route::post('/urls', function (Request $request) {
     $name = $parsedName['scheme'] . '://' . $parsedName['host'];
     $dataUrls = DB::table('urls')->where('name', $name)->first();
     if ($dataUrls !== null) {
-        $request->session()->flash('status', 'сайт обновлен');
+        session()->flash('status', 'сайт обновлен');
         $created_at = $dataUrls->created_at;
         $id = $dataUrls->id;
     } else {
-        $request->session()->flash('status', 'сайт добавлен');
+        session()->flash('status', 'сайт добавлен');
         $created_at = Carbon::now();
     }
     $updated = Carbon::now();
-
     DB::table('urls')->updateOrInsert(
         ['name' => $name, 'created_at' => $created_at],
         ['updated_at' => $updated],
