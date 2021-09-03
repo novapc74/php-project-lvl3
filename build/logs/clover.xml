@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1630646728">
-  <project timestamp="1630646728">
+<coverage generated="1630655658">
+  <project timestamp="1630655658">
     <file name="/home/novapc74/php-project-lvl3/app/Console/Kernel.php">
       <class name="App\Console\Kernel" namespace="global">
         <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="3" elements="6" coveredelements="4"/>
@@ -17,10 +17,10 @@
       <class name="App\Exceptions\Handler" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
       </class>
-      <line num="35" type="method" name="register" visibility="public" complexity="1" crap="1" count="6"/>
-      <line num="37" type="stmt" count="6"/>
-      <line num="39" type="stmt" count="6"/>
-      <line num="40" type="stmt" count="6"/>
+      <line num="35" type="method" name="register" visibility="public" complexity="1" crap="1" count="5"/>
+      <line num="37" type="stmt" count="5"/>
+      <line num="39" type="stmt" count="5"/>
+      <line num="40" type="stmt" count="5"/>
       <metrics loc="41" ncloc="26" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
     </file>
     <file name="/home/novapc74/php-project-lvl3/app/Http/Controllers/Controller.php">
