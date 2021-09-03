@@ -17,12 +17,12 @@ class RouteTest extends TestCase
         parent::setUp();
         $created_at = now();
         $updated_at = $created_at;
-        $this->urlData = [
+        $urlData = [
             'name' => 'https://www.test.com',
             'created_at' => $created_at,
             'updated_at' => $updated_at,
         ];
-        $this->id = DB::table('urls')->insertGetId($this->urlData);
+        $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
     public function testUrlsIndex(): void
@@ -33,7 +33,10 @@ class RouteTest extends TestCase
 
     public function testUrlsStore(): void
     {
-        $response = $this->post('/urls', ['url' => $this->urlData]);
+        $urlData = [
+            'name' => 'https://www.test.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $urlData]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
         $this->assertDatabaseHas('urls', $urlData);
@@ -57,7 +60,7 @@ class RouteTest extends TestCase
         Http::fake(function ($request) use ($body) {
             Http::response($body, 200);
         });
-        $response = $this->post('/urls/{id}/checks', ['id' => $this->id]);
+        $response = $this->post(route('urlChecks.store', [$this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
         $this->assertDatabaseHas('url_checks', ['url_id' => $this->id]);
