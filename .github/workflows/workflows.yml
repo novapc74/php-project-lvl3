@@ -32,8 +32,8 @@ jobs:
       run: npm install
     - name: Minify CSS and JS files
       run: npm run prod
-    - name: Run RouteTest
-      run: php artisan test
+    - name: Run linter
+      run: composer run-script phpcs -- --standard=PSR12 routes
     - name: Run unit tests via PHPUnit
       env:
         DB_CONNECTION: sqlite
