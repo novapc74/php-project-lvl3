@@ -35,7 +35,7 @@ class RouteTest extends TestCase
     {
         $response = $this->post(route('urls.store', ['url' => $this->urlData]));
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect();
+        $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('urls', $this->urlData);
     }
 
@@ -55,11 +55,11 @@ class RouteTest extends TestCase
     {
         $body = file_get_contents(realpath(__DIR__ . '/fixtures/htmlTest.html'));
         Http::fake(function ($request) use ($body) {
-            Http::response($body, 200);
+            Http::response($body);
         });
         $response = $this->post(route('urlChecks.store', [$this->id]));
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect();
+        $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('url_checks', ['url_id' => $this->id]);
     }
 }

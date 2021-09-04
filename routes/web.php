@@ -11,11 +11,11 @@ use DiDom\Document;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-Route::get('/', function () {
+Route::get('/', function (): string {
     return view('index');
 })->name('urls.index');
 
-Route::post('/urls', function (Request $request) {
+Route::post('/urls', function (Request $request): object {
     $params = $request->all();
     $messages = [
         'required' => 'Некорректный URL',
@@ -53,7 +53,7 @@ Route::post('/urls', function (Request $request) {
     return redirect()->route('url.show', ['id' => $id]);
 })->name('urls.store');
 
-Route::get('/urls', function (Request $request) {
+Route::get('/urls', function (Request $request): string {
     $latestPosts = DB::table('url_checks')
                ->select('url_id', 'status_code', DB::raw('MAX(updated_at) as last_post_updated_at'))
                ->groupBy('url_id', 'status_code');
@@ -65,7 +65,7 @@ Route::get('/urls', function (Request $request) {
     $urlsAll = collect($urlsJoin)->toArray();
     $page = isset($request->page) ? $request->page : 1;
     $perPage = 15;
-    $offset = ($page * $perPage) - $perPage;
+    $offset = (int)(($page * $perPage) - $perPage);
 
     $urls =  new LengthAwarePaginator(
         array_slice($urlsAll, $offset, $perPage, true),
@@ -79,7 +79,7 @@ Route::get('/urls', function (Request $request) {
     return view('urls', ['urls' => $urls, 'flash' => $flash]);
 })->name('urls.show');
 
-Route::get('/urls/{id}', function ($id) {
+Route::get('/urls/{id}', function ($id): string {
     $urlData = DB::table('urls')->where('id', $id)->first();
     $url = collect($urlData)->all();
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('updated_at', 'desc')->get();
@@ -88,7 +88,7 @@ Route::get('/urls/{id}', function ($id) {
     return view('url', ['url' => $url, 'urlCheck' => $urlCheck, 'flash' => $flash]);
 })->name('url.show');
 
-Route::post('/urls/{id}/checks', function ($id) {
+Route::post('/urls/{id}/checks', function ($id): object {
     $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
     $created ?? $created = Carbon::now();
