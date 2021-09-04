@@ -58,7 +58,7 @@ Route::get('/urls', function (Request $request): string {
                ->select('url_id', 'status_code', DB::raw('MAX(updated_at) as last_post_updated_at'))
                ->groupBy('url_id', 'status_code');
     $urlsJoin = DB::table('urls')
-        ->leftJoinSub($latestPosts, 'latest_posts', function ($join) {
+        ->leftJoinSub($latestPosts, 'latest_posts', function ($join): void {
             $join->on('urls.id', '=', 'latest_posts.url_id');
         })->select('id', 'name', 'last_post_updated_at', 'status_code')->orderBy('created_at')->get();
 
@@ -93,6 +93,7 @@ Route::post('/urls/{id}/checks', function ($id): object {
     $name = DB::table('urls')->where('id', $id)->value('name');
     $created ?? $created = Carbon::now();
     $updated = Carbon::now();
+    $errors['alert'] = '';
     try {
         $response = Http::get($name);
     } catch (Throwable $e) {

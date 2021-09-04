@@ -12,6 +12,9 @@ class RouteTest extends TestCase
 {
     use RefreshDatabase;
 
+    private array $urlData = [];
+    private int $id;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -53,7 +56,7 @@ class RouteTest extends TestCase
 
     public function testUrlsChecksStore(): void
     {
-        $body = file_get_contents(realpath(__DIR__ . '/fixtures/htmlTest.html'));
+        $body = (string)(file_get_contents(realpath(__DIR__ . '/fixtures/htmlTest.html')));
         Http::fake(function ($request) use ($body) {
             Http::response($body);
         });
