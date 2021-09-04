@@ -93,7 +93,7 @@ Route::post('/urls/{id}/checks', function ($id): object {
     $name = DB::table('urls')->where('id', $id)->value('name');
     $created ?? $created = Carbon::now();
     $updated = Carbon::now();
-    $errors['alert'] = '';
+    $errors = [];
     try {
         $response = Http::get($name);
     } catch (Throwable $e) {

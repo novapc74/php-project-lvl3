@@ -56,10 +56,8 @@ class RouteTest extends TestCase
 
     public function testUrlsChecksStore(): void
     {
-        $body = (string)(file_get_contents(realpath(__DIR__ . '/fixtures/htmlTest.html')));
-        Http::fake(function ($request) use ($body) {
-            Http::response($body);
-        });
+        $body = (string)(file_get_contents((string)(realpath(__DIR__ . '/fixtures/htmlTest.html'))));
+        Http::fake(fn ($request) => Http::response($body));
         $response = $this->post(route('urlChecks.store', [$this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect()->assertStatus(302);
