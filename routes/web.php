@@ -109,9 +109,9 @@ Route::post('/urls/{id}/checks', function ($id) {
         [
             'url_id' => $id,
             'status_code' => $statusCode,
-            'h1' => mb_strimwidth($h1, 0, 12, '...'),
-            'keywords' => mb_strimwidth($keywords, 0, 33, '...'),
-            'description' => mb_strimwidth($description, 0, 33, '...'),
+            'h1' => $h1,
+            'keywords' => $keywords,
+            'description' => $description,
             'created_at' => $created,
             'updated_at' => $updated
         ]
