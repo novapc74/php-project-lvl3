@@ -31,7 +31,7 @@ class RouteTest extends TestCase
     public function testUrlsIndex(): void
     {
         $response = $this->get(route('urls.index'));
-        $response->assertOk()->assertViewIs('index')->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUrlsStore(): void
@@ -45,13 +45,13 @@ class RouteTest extends TestCase
     public function testUrlsShow(): void
     {
         $response = $this->get(route('urls.show'));
-        $response->assertOk()->assertViewIs('urls')->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUrlShow(): void
     {
         $response = $this->get(route('url.show', $this->id));
-        $response->assertOk()->assertViewIs('url')->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testUrlsChecksStore(): void
