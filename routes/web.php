@@ -77,7 +77,9 @@ Route::get('/urls', function (Request $request): string {
 
 Route::get('/urls/{id}', function ($id): string {
     $urlData = DB::table('urls')->where('id', $id)->first();
-    !$urlData ? abort(404) : '';
+    if ($urlData == null) {
+        abort(404);
+    }
     $url = collect($urlData)->all();
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('updated_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
