@@ -24,7 +24,6 @@ Route::post('/urls', function (Request $request): object {
     $validator = Validator::make($params['url'], [
         'name' => ['required', 'url', 'max:255'],
     ], $messages);
-
     if ($validator->fails()) {
         return redirect()
             ->route('urls.index')
@@ -61,12 +60,10 @@ Route::get('/urls', function (Request $request): string {
         ->leftJoinSub($latestPosts, 'latest_posts', function ($join): void {
             $join->on('urls.id', '=', 'latest_posts.url_id');
         })->select('id', 'name', 'last_post_updated_at', 'status_code')->orderBy('created_at')->get();
-
     $urlsAll = collect($urlsJoin)->toArray();
     $page = isset($request->page) ? $request->page : 1;
     $perPage = 15;
     $offset = (int)(($page * $perPage) - $perPage);
-
     $urls =  new LengthAwarePaginator(
         array_slice($urlsAll, $offset, $perPage, true),
         count($urlsAll),
@@ -74,13 +71,13 @@ Route::get('/urls', function (Request $request): string {
         $page,
         ['path' => $request->url(), 'query' => $request->query()]
     );
-
     $flash = session('status');
     return view('urls', ['urls' => $urls, 'flash' => $flash]);
 })->name('urls.show');
 
 Route::get('/urls/{id}', function ($id): string {
     $urlData = DB::table('urls')->where('id', $id)->first();
+    !$urlData ? abort(404) : '';
     $url = collect($urlData)->all();
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('updated_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
@@ -119,4 +116,4 @@ Route::post('/urls/{id}/checks', function ($id): object {
     );
     session()->flash('status', 'Страница успешно проверена');
     return redirect()->route('url.show', ['id' => $id]);
-})->name('urlChecks.store');
+})->name('url.check');

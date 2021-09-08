@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,7 +11,6 @@ class RouteTest extends TestCase
 {
     use RefreshDatabase;
 
-    private array $urlData = [];
     private int $id;
 
     public function setUp(): void
@@ -20,12 +18,12 @@ class RouteTest extends TestCase
         parent::setUp();
         $created_at = now();
         $updated_at = $created_at;
-        $this->urlData = [
+        $urlData = [
             'name' => 'https://www.test.com',
             'created_at' => $created_at,
             'updated_at' => $updated_at,
         ];
-        $this->id = DB::table('urls')->insertGetId($this->urlData);
+        $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
     public function testUrlsIndex(): void
@@ -36,10 +34,13 @@ class RouteTest extends TestCase
 
     public function testUrlsStore(): void
     {
-        $response = $this->post(route('urls.store', ['url' => $this->urlData]));
+        $urlData = [
+            'name' => 'https://www.test.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $urlData]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect()->assertStatus(302);
-        $this->assertDatabaseHas('urls', $this->urlData);
+        $this->assertDatabaseHas('urls', $urlData);
     }
 
     public function testUrlsShow(): void
@@ -54,13 +55,10 @@ class RouteTest extends TestCase
         $response->assertOk();
     }
 
-    public function testUrlsChecksStore(): void
+    public function testInvalidUrlShow(): void
     {
-        $body = (string)(file_get_contents((string)(realpath(__DIR__ . '/fixtures/htmlTest.html'))));
-        Http::fake(fn ($request) => Http::response($body));
-        $response = $this->post(route('urlChecks.store', [$this->id]));
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect()->assertStatus(302);
-        $this->assertDatabaseHas('url_checks', ['url_id' => $this->id]);
+        $invalidId = [1000];
+        $response = $this->get(route('url.show', $invalidId));
+        $response->assertNotFound();
     }
 }
