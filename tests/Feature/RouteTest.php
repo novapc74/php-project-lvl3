@@ -43,6 +43,16 @@ class RouteTest extends TestCase
         $this->assertDatabaseHas('urls', $urlData);
     }
 
+    public function testInvalidUrlsStore(): void
+    {
+        $newData = [
+            'id' => 100,
+            'name' => 'https://www.fake.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $newData]));
+        $this->assertDatabaseMissing('urls', $newData);
+    }
+
     public function testUrlsShow(): void
     {
         $response = $this->get(route('urls.show'));
