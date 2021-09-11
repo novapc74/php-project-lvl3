@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -37,15 +36,15 @@ Route::post('/urls', function (Request $request): object {
     $dataUrls = DB::table('urls')->where('name', $name)->first();
     if ($dataUrls !== null) {
         session()->flash('status', 'сайт обновлен');
-        $created_at = $dataUrls->created_at;
+        $created = $dataUrls->created_at;
         $id = $dataUrls->id;
     } else {
         session()->flash('status', 'сайт добавлен');
-        $created_at = Carbon::now();
+        $created = now();
     }
-    $updated = Carbon::now();
+    $updated = now();
     DB::table('urls')->updateOrInsert(
-        ['name' => $name, 'created_at' => $created_at],
+        ['name' => $name, 'created_at' => $created],
         ['updated_at' => $updated],
     );
     $id = DB::table('urls')->where('name', $name)->value('id');
@@ -77,7 +76,7 @@ Route::get('/urls', function (Request $request): string {
 
 Route::get('/urls/{id}', function ($id): string {
     $urlData = DB::table('urls')->where('id', $id)->first();
-    if ($urlData == null) {
+    if (is_null($urlData)) {
         abort(404);
     }
     $url = collect($urlData)->all();
@@ -91,7 +90,7 @@ Route::post('/urls/{id}/checks', function ($id): object {
     $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
     $created ?? $created = Carbon::now();
-    $updated = Carbon::now();
+    $updated = now();
     $errors = [];
     try {
         $response = Http::get($name);

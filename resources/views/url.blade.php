@@ -25,7 +25,6 @@
                         <td>{{ $url['updated_at'] }}</td>
                         </tr>
                     </table>
-                </div>
                 <h2 class="mt-5 mb-3">Проверки</h2>
                 <p>
                 <form action="/urls/{{ $url['id'] }}/checks" method="POST">
@@ -57,6 +56,7 @@
                         </tr>
                     </tbody>
                     </table>
+                </div>
         </div>
     </main>
     @include('footer')

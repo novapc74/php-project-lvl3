@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class HttpTest extends TestCase
+class UrlCheckTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,12 +17,12 @@ class HttpTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $created_at = now();
-        $updated_at = $created_at;
+        $created = now();
+        $updated = $created;
         $urlData = [
             'name' => 'https://www.test.com',
-            'created_at' => $created_at,
-            'updated_at' => $updated_at,
+            'created_at' => $created,
+            'updated_at' => $updated,
         ];
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
