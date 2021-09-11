@@ -32,8 +32,6 @@ class UrlCheckTest extends TestCase
         $body = (string)(file_get_contents('tests/fixtures/htmlTest.html'));
         Http::fake(fn ($request) => Http::response($body));
         $response = $this->post(route('url.check', [$this->id]));
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('url_checks', ['url_id' => $this->id]);
     }
 }
