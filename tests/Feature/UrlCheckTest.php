@@ -20,7 +20,7 @@ class UrlCheckTest extends TestCase
         $created = now();
         $updated = $created;
         $urlData = [
-            'name' => 'https://www.test.com',
+            'name' => 'http://www.dinamovki.ru',
             'created_at' => $created,
             'updated_at' => $updated,
         ];
@@ -32,6 +32,8 @@ class UrlCheckTest extends TestCase
         $body = (string)(file_get_contents('tests/fixtures/htmlTest.html'));
         Http::fake(fn ($request) => Http::response($body));
         $response = $this->post(route('url.check', [$this->id]));
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('url_checks', ['url_id' => $this->id]);
     }
 }
