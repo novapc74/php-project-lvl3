@@ -29,8 +29,10 @@ class UrlCheckTest extends TestCase
 
     public function testUrlCheck(): void
     {
-        $body = (string)(file_get_contents('tests/fixtures/htmlTest.html'));
+        $body = (string)(file_get_contents(__DIR__ . '/../fixtures/htmlTest.html'));
+
         Http::fake(fn ($request) => Http::response($body, 200));
+
         $response = $this->post(route('url.check', [$this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect()->assertStatus(302);
