@@ -89,7 +89,7 @@ Route::get('/urls/{id}', function ($id): string {
 Route::post('/urls/{id}/checks', function ($id): object {
     $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
-    $created ?? $created = Carbon::now();
+    $created ?: $created = now();
     $updated = now();
     $errors = [];
     try {
