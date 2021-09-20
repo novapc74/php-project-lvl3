@@ -51,7 +51,7 @@ Route::post('/urls', function (Request $request): object {
     return redirect()->route('url.show', ['id' => $id]);
 })->name('urls.store');
 
-Route::get('/urls', function (Request $request): string {
+Route::get('/urls', function (): string {
     $urls = app('db')->table('urls')->orderBy('id')->paginate(15);
     $lastChecks = app('db')->table('url_checks')
         ->distinct('url_id')
