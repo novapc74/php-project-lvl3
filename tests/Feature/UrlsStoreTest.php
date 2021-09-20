@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UrlsStoreTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function testUrlsStore(): void
     {
         $urlData = [

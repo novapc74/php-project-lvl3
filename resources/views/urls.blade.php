@@ -19,8 +19,8 @@
                             <tr>
                                 <th scope="row">{{ $url->id }}</th>
                                 <td><a href="/urls/{{ $url->id }}">{{ $url->name }}</a></td>
-                                <td>{{ $url->last_post_updated_at }}</td>
-                                <td>{{ $url->status_code }}</td>
+                                <td>{{ $lastChecks[$url->id]->updated_at ?? null }}</td>
+                                <td>{{ $lastChecks[$url->id]->status_code ?? null}}</td>
                             </tr>
                             @endforeach
 

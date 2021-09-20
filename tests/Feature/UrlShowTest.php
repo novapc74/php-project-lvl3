@@ -4,12 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UrlShowTest extends TestCase
 {
-    use RefreshDatabase;
-
     private int $id;
 
     public function setUp(): void

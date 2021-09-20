@@ -17,7 +17,8 @@ Route::get('/', function (): string {
 Route::post('/urls', function (Request $request): object {
     $params = $request->all();
     $messages = [
-        'required' => 'Некорректный URL',
+        'required' => 'Поле не должно быть пустым',
+        'url' => 'Некорректный URL',
         'max' => 'Длина URL не должна превышать 255 символов.',
     ];
     $validator = Validator::make($params['url'], [
@@ -26,20 +27,19 @@ Route::post('/urls', function (Request $request): object {
     if ($validator->fails()) {
         return redirect()
             ->route('urls.index')
-                ->withErrors($validator)
-                    ->withInput();
+            ->withErrors($validator)
+            ->withInput();
     }
     $name = strtolower($params['url']['name']);
-    !isset(parse_url($name)['scheme']) ? $name = 'https://' . $name : '';
     $parsedName = parse_url($name);
     $name = $parsedName['scheme'] . '://' . $parsedName['host'];
     $dataUrls = DB::table('urls')->where('name', $name)->first();
-    if ($dataUrls !== null) {
-        session()->flash('status', 'сайт обновлен');
+    if (!is_null($dataUrls)) {
+        session()->flash('status', 'Сайт обновлен');
         $created = $dataUrls->created_at;
         $id = $dataUrls->id;
     } else {
-        session()->flash('status', 'сайт добавлен');
+        session()->flash('status', 'Сайт добавлен');
         $created = now();
     }
     $updated = now();
@@ -52,26 +52,15 @@ Route::post('/urls', function (Request $request): object {
 })->name('urls.store');
 
 Route::get('/urls', function (Request $request): string {
-    $latestPosts = DB::table('url_checks')
-               ->select('url_id', 'status_code', DB::raw('MAX(updated_at) as last_post_updated_at'))
-               ->groupBy('url_id', 'status_code');
-    $urlsJoin = DB::table('urls')
-        ->leftJoinSub($latestPosts, 'latest_posts', function ($join): void {
-            $join->on('urls.id', '=', 'latest_posts.url_id');
-        })->select('id', 'name', 'last_post_updated_at', 'status_code')->orderBy('created_at')->get();
-    $urlsAll = collect($urlsJoin)->toArray();
-    $page = isset($request->page) ? $request->page : 1;
-    $perPage = 15;
-    $offset = (int)(($page * $perPage) - $perPage);
-    $urls =  new LengthAwarePaginator(
-        array_slice($urlsAll, $offset, $perPage, true),
-        count($urlsAll),
-        $perPage,
-        $page,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+    $urls = app('db')->table('urls')->orderBy('id')->paginate(15);
+    $lastChecks = app('db')->table('url_checks')
+        ->distinct('url_id')
+        ->orderBy('url_id')
+        ->latest()
+        ->get()
+        ->keyBy('url_id');
     $flash = session('status');
-    return view('urls', ['urls' => $urls, 'flash' => $flash]);
+    return view('urls', compact('urls', 'lastChecks', 'flash'));
 })->name('urls.show');
 
 Route::get('/urls/{id}', function ($id): string {
@@ -83,13 +72,13 @@ Route::get('/urls/{id}', function ($id): string {
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('updated_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
     $flash = session('status');
-    return view('url', ['url' => $url, 'urlCheck' => $urlCheck, 'flash' => $flash]);
+    return view('url', compact('url', 'urlCheck', 'flash'));
 })->name('url.show');
 
 Route::post('/urls/{id}/checks', function ($id): object {
     $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
-    $created ?? $created = now();
+    $created = now() ?? null ;
     $updated = now();
     $errors = [];
     try {
