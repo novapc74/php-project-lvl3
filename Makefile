@@ -22,7 +22,7 @@ log:
 	tail -f storage/logs/laravel.log
 
 test:
-	php artisan test
+	composer exec --verbose phpunit tests
 	
 test-coverage:
 	composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml
