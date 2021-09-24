@@ -26,7 +26,7 @@ Route::post('/urls', function (Request $request): object {
     ], $messages);
     if ($validator->fails()) {
         return redirect()
-            ->route('urls.index')
+            ->route('urls.create')
             ->withErrors($validator)
             ->withInput();
     }
@@ -35,11 +35,11 @@ Route::post('/urls', function (Request $request): object {
     $name = $parsedName['scheme'] . '://' . $parsedName['host'];
     $dataUrls = DB::table('urls')->where('name', $name)->first();
     if (!is_null($dataUrls)) {
-        session()->flash('status', 'Сайт обновлен');
+        flash('Сайт обновлен')->success();
         $created = $dataUrls->created_at;
         $id = $dataUrls->id;
     } else {
-        session()->flash('status', 'Сайт добавлен');
+        flash('Сайт добавлен')->success();
         $created = now();
     }
     $updated = now();
@@ -59,8 +59,7 @@ Route::get('/urls', function (): string {
         ->latest()
         ->get()
         ->keyBy('url_id');
-    $flash = session('status');
-    return view('index', compact('urls', 'lastChecks', 'flash'));
+    return view('index', compact('urls', 'lastChecks'));
 })->name('urls.index');
 
 Route::get('/urls/{id}', function ($id): string {
@@ -71,8 +70,7 @@ Route::get('/urls/{id}', function ($id): string {
     $url = collect($urlData)->all();
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('created_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
-    $flash = session('status');
-    return view('url', compact('url', 'urlCheck', 'flash'));
+    return view('url', compact('url', 'urlCheck'));
 })->name('url.show');
 
 Route::post('/urls/{id}/checks', function ($id): object {
@@ -101,6 +99,6 @@ Route::post('/urls/{id}/checks', function ($id): object {
             'created_at' => $created
         ]
     );
-    session()->flash('status', 'Страница успешно проверена');
+    flash('Страница успешно проверена')->success();
     return redirect()->route('url.show', ['id' => $id]);
 })->name('url.checks');

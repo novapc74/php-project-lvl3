@@ -21,8 +21,4 @@
         @endforeach
     </div>
 @endif
-@if (isset($flash))
-<div class="alert alert-info" role="alert">
-      {{ $flash }}
-</div>
-@endif
+@include('flash::message')
