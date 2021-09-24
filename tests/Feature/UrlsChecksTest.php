@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class UrlCheckTest extends TestCase
+class UrlsChecksTest extends TestCase
 {
     private int $id;
 
@@ -19,12 +19,11 @@ class UrlCheckTest extends TestCase
         $urlData = [
             'name' => 'http://www.dinamovki.ru',
             'created_at' => $created,
-            'updated_at' => $updated,
         ];
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
-    public function testUrlCheck(): void
+    public function testUrlChecks(): void
     {
         $body = (string)(file_get_contents(__DIR__ . '/../fixtures/htmlTest.html'));
         $checkData = [
@@ -37,9 +36,30 @@ class UrlCheckTest extends TestCase
 
         Http::fake(fn ($request) => Http::response($body, 200));
 
-        $response = $this->post(route('url.check', [$this->id]));
+        $response = $this->post(route('url.checks', [$this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('url_checks', $checkData);
+    }
+
+    public function testUrlsStore(): void
+    {
+        $urlData = [
+            'name' => 'https://www.test.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $urlData]));
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect()->assertStatus(302);
+        $this->assertDatabaseHas('urls', $urlData);
+    }
+
+    public function testInvalidUrlsStore(): void
+    {
+        $newData = [
+            'id' => 100,
+            'name' => 'https://www.fake.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $newData]));
+        $this->assertDatabaseMissing('urls', $newData);
     }
 }

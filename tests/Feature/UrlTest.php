@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 
-class UrlShowTest extends TestCase
+class UrlTest extends TestCase
 {
     private int $id;
 
@@ -22,15 +22,15 @@ class UrlShowTest extends TestCase
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
-    public function testUrlsIndex(): void
+    public function testUrlsCreate(): void
     {
-        $response = $this->get(route('urls.index'));
+        $response = $this->get(route('urls.create'));
         $response->assertOk();
     }
 
-    public function testUrlsShow(): void
+    public function testUrlsIndex(): void
     {
-        $response = $this->get(route('urls.show'));
+        $response = $this->get(route('urls.index'));
         $response->assertOk();
     }
 
