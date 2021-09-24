@@ -2,13 +2,12 @@ start:
 	php artisan serve --host 127.0.0.1
 
 setup:
+	php -r "file_exists('.env') || copy('.env.example', '.env');"
 	composer install
-	cp -n .env.example .env|| true
-	php artisan key:gen --ansi
+	chmod -R 777 storage bootstrap/cache
+	php artisan key:generate
+	mkdir -p database
 	touch database/database.sqlite
-	php artisan migrate
-	php artisan db:seed
-	npm install
 
 watch:
 	npm run watch
