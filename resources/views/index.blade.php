@@ -1,28 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @include('head')
     <body class="vh-100 d-flex flex-column">
-        <header class="flex-shrink-0">
-            @include('nav')
-        </header>
+        @include('nav')
         <main class="flex-grow-1">
-            <div class="jumbotron jumbotron-fluid bg-dark">
-                <div class="container-lg">
-                    <div class="row">
-                        <div class="col-12 col-md-10 col-lg-8 mx-auto text-white">
-                            <h1 class="display-3">Анализатор страниц</h1>
-                            <p class="lead">Бесплатно проверяйте сайты на SEO пригодность</p>
-                            <form action="{{ route('urls.store') }}" method="post" class="d-flex justify-content-center">
-                                @csrf
-                                <input type="text" name="url[name]" value="{{ $url['name'] ?? '' }}" class="form-control form-control-lg" placeholder="https://www.example.com">
-                                <button type="submit" class="btn btn-lg btn-primary ml-3 px-5 text-uppercase">Проверить</button>
-                            </form>
-                        </div>
-                    </div>
+            <div class="container-lg">
+                <h1 class="mt-5 mb-3">Сайты</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap">
+                        <tbody>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Последняя проверка</th>
+                                <th scope="col">Код ответа</th>
+                            </tr>
+                            @foreach ($urls as $url)
+                            <tr>
+                                <th scope="row">{{ $url->id }}</th>
+                                <td><a href="{{ route('url.show', ['id' => $url->id]) }}">{{ $url->name }}</a></td>
+                                <td>{{ $lastChecks[$url->id]->created_at ?? null }}</td>
+                                <td>{{ $lastChecks[$url->id]->status_code ?? null}}</td>
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
                 </div>
+                <nav aria-label="navigation">
+                    {{ $urls->links("pagination::bootstrap-4") }}
+                </nav>
             </div>
         </main>
-        @include('footer')
+    @include('footer')
     </body>
 </html>
-

@@ -27,7 +27,7 @@
                     </table>
                 <h2 class="mt-5 mb-3">Проверки</h2>
                 <p>
-                <form action="{{ route('url.check', ['id' => $url['id']]) }}" method="POST">
+                <form action="{{ route('url.checks', ['id' => $url['id']]) }}" method="POST">
                     @csrf
                     <input type="hidden" name = "id" value = "{{ $url['id'] }}" />
                     <input type="submit" class="btn btn-primary" value="Запустить проверку">
@@ -47,7 +47,7 @@
                             @foreach ($urlCheck as $url)
                                 <tr>
                                     @foreach ($url as $dataView => $view)
-                                        @if ($dataView !== 'url_id' && $dataView !== 'created_at')
+                                        @if ($dataView !== 'url_id')
                                             <td><?= $view ?></td>
                                         @endif
                                     @endforeach

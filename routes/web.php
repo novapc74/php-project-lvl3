@@ -11,8 +11,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 Route::get('/', function (): string {
-    return view('index');
-})->name('urls.index');
+    return view('create');
+})->name('urls.create');
 
 Route::post('/urls', function (Request $request): object {
     $params = $request->all();
@@ -60,8 +60,8 @@ Route::get('/urls', function (): string {
         ->get()
         ->keyBy('url_id');
     $flash = session('status');
-    return view('urls', compact('urls', 'lastChecks', 'flash'));
-})->name('urls.show');
+    return view('index', compact('urls', 'lastChecks', 'flash'));
+})->name('urls.index');
 
 Route::get('/urls/{id}', function ($id): string {
     $urlData = DB::table('urls')->where('id', $id)->first();
@@ -69,17 +69,15 @@ Route::get('/urls/{id}', function ($id): string {
         abort(404);
     }
     $url = collect($urlData)->all();
-    $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('updated_at', 'desc')->get();
+    $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('created_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
     $flash = session('status');
     return view('url', compact('url', 'urlCheck', 'flash'));
 })->name('url.show');
 
 Route::post('/urls/{id}/checks', function ($id): object {
-    $created = DB::table('url_checks')->where('url_id', $id)->value('created_at');
     $name = DB::table('urls')->where('id', $id)->value('name');
-    $created = now() ?? null ;
-    $updated = now();
+    $created = now();
     $errors = [];
     try {
         $response = Http::get($name);
@@ -100,10 +98,9 @@ Route::post('/urls/{id}/checks', function ($id): object {
             'h1' => $h1,
             'keywords' => $keywords,
             'description' => $description,
-            'created_at' => $created,
-            'updated_at' => $updated
+            'created_at' => $created
         ]
     );
     session()->flash('status', 'Страница успешно проверена');
     return redirect()->route('url.show', ['id' => $id]);
-})->name('url.check');
+})->name('url.checks');
