@@ -26,7 +26,7 @@ Route::post('/urls', function (Request $request): object {
     ], $messages);
     if ($validator->fails()) {
         return redirect()
-            ->route('urls.create')
+            ->route('root')
             ->withErrors($validator)
             ->withInput();
     }
