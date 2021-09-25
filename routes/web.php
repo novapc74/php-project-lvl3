@@ -12,7 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 Route::get('/', function (): string {
     return view('create');
-})->name('urls.create');
+})->name('root');
 
 Route::post('/urls', function (Request $request): object {
     $params = $request->all();

@@ -6,7 +6,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="{{ route('urls.create') }}">Главная</a>
+                <a class="nav-link active" href="{{ route('root') }}">Главная</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link " href="{{ route('urls.store') }}">Сайты</a>

@@ -22,9 +22,9 @@ class UrlTest extends TestCase
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
-    public function testUrlsCreate(): void
+    public function testUrlsRoot(): void
     {
-        $response = $this->get(route('urls.create'));
+        $response = $this->get(route('root'));
         $response->assertOk();
     }
 
