@@ -25,7 +25,11 @@ class UrlsChecksTest extends TestCase
     public function getFixtureFullPath(string $fixtureName): string
     {
         $parts = [__DIR__, '../fixtures', $fixtureName];
-        return realpath(implode(DIRECTORY_SEPARATOR, $parts));
+        $path = realpath(implode(DIRECTORY_SEPARATOR, $parts));
+        if (!$path) {
+            new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error. Path to fextures not found");
+        }
+        return $path;
     }
 
     public function testUrlChecks(): void
