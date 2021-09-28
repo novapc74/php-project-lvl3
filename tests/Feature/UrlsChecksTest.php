@@ -15,7 +15,6 @@ class UrlsChecksTest extends TestCase
     {
         parent::setUp();
         $created = now();
-        $updated = $created;
         $urlData = [
             'name' => 'http://www.dinamovki.ru',
             'created_at' => $created,
@@ -26,7 +25,7 @@ class UrlsChecksTest extends TestCase
     public function getFixtureFullPath(string $fixtureName): string
     {
         $parts = [__DIR__, '../fixtures', $fixtureName];
-        return realpath(implode('/', $parts));
+        return $path = realpath(implode('/', $parts));
     }
 
     public function testUrlChecks(): void
@@ -66,7 +65,7 @@ class UrlsChecksTest extends TestCase
             'id' => 100,
             'name' => 'https://www.fake.com',
         ];
-        $response = $this->post(route('urls.store', ['url' => $newData]));
+        $this->post(route('urls.store', ['url' => $newData]));
         $this->assertDatabaseMissing('urls', $newData);
     }
 }
