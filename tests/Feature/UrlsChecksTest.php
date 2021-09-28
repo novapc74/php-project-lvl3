@@ -23,9 +23,9 @@ class UrlsChecksTest extends TestCase
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
-    public function getFixtureFullPath($fixtureName): string
+    public function getFixtureFullPath(string $fixtureName): string
     {
-        $parts = [__DIR__, '/../fixtures', $fixtureName];
+        $parts = [__DIR__, '../fixtures', $fixtureName];
         return realpath(implode('/', $parts));
     }
 
