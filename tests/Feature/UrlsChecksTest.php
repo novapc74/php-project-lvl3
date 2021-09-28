@@ -25,12 +25,13 @@ class UrlsChecksTest extends TestCase
     public function getFixtureFullPath(string $fixtureName): string
     {
         $parts = [__DIR__, '../fixtures', $fixtureName];
-        return $path = realpath(implode('/', $parts));
+        $pathToFixture = realpath(implode('/', $parts));
+        return $pathToFixture;
     }
 
     public function testUrlChecks(): void
     {
-        $pathToFixtures = (string)($this->getFixtureFullPath('htmlTest.html'));
+        $pathToFixtures = $this->getFixtureFullPath('htmlTest.html');
         $body = (string)(file_get_contents($pathToFixtures));
         $checkData = [
             'url_id' => $this->id,
