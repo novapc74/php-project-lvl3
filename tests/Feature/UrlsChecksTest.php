@@ -25,8 +25,7 @@ class UrlsChecksTest extends TestCase
     public function getFixtureFullPath(string $fixtureName): string
     {
         $parts = [__DIR__, '../fixtures', $fixtureName];
-        $pathToFixture = realpath(implode('/', $parts));
-        return $pathToFixture;
+        return realpath(implode(DIRECTORY_SEPARATOR, $parts));
     }
 
     public function testUrlChecks(): void
