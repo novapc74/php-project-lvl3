@@ -12,12 +12,11 @@ class UrlTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $created = now();
-        $updated = $created;
+        $setTime = now();
         $urlData = [
             'name' => 'https://www.test.com',
-            'created_at' => $created,
-            'updated_at' => $updated,
+            'created_at' => $setTime,
+            'updated_at' => $setTime,
         ];
         $this->id = DB::table('urls')->insertGetId($urlData);
     }

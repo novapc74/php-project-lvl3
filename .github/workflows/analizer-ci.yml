@@ -15,23 +15,8 @@ jobs:
     - name: Setup
       run: make setup
 
-    - name: Run laravel database migrations
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: php artisan migrate --force
-
-    - name: Install NPM dependencies
-      run: npm install
-
-    - name: Minify CSS and JS files
-      run: npm run prod
-
     - name: Run linter
       run: make lint
 
     - name: Run Feature tests
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
       run: make test

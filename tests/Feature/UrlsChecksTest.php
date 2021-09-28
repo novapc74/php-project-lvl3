@@ -23,9 +23,16 @@ class UrlsChecksTest extends TestCase
         $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
+    public function getFixtureFullPath($fixtureName): string
+    {
+        $parts = [__DIR__, '/../fixtures', $fixtureName];
+        return realpath(implode('/', $parts));
+    }
+
     public function testUrlChecks(): void
     {
-        $body = (string)(file_get_contents(__DIR__ . '/../fixtures/htmlTest.html'));
+        $pathToFixtures = $this->getFixtureFullPath('htmlTest.html');
+        $body = (string)(file_get_contents($pathToFixtures));
         $checkData = [
             'url_id' => $this->id,
             'status_code' => '200',

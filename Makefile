@@ -2,12 +2,13 @@ start:
 	php artisan serve --host 127.0.0.1
 
 setup:
-	php -r "file_exists('.env') || copy('.env.example', '.env');"
 	composer install
-	chmod -R 777 storage bootstrap/cache
-	php artisan key:generate
-	mkdir -p database
+	cp -n .env.example .env|| true
+	php artisan key:gen --ansi
 	touch database/database.sqlite
+	php artisan migrate --force
+	npm install
+	npm run prod
 
 watch:
 	npm run watch
@@ -31,7 +32,7 @@ deploy:
 	git push heroku
 
 lint:
-	composer run-script phpcs -- --standard=PSR12 routes tests app
+	composer exec --verbose phpcs -- --standard=PSR12 routes tests app
 
 lint-fix:
 	composer run-script phpcbf -- --standard=PSR12 routes
