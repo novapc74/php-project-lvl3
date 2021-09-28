@@ -26,8 +26,8 @@ class UrlsChecksTest extends TestCase
     {
         $parts = [__DIR__, '../fixtures', $fixtureName];
         $path = realpath(implode(DIRECTORY_SEPARATOR, $parts));
-        if (!$path) {
-            new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error. Path to fextures not found");
+        if ($path == false) {
+            throw new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error. Path to fextures not found");
         }
         return $path;
     }
