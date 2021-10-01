@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use DiDom\Document;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Client;
+use Illuminate\Http\Client\HttpClientException;
 
 Route::get('/', function (): string {
     return view('create');
