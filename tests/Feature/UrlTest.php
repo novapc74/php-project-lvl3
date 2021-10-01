@@ -13,12 +13,12 @@ class UrlTest extends TestCase
     {
         parent::setUp();
         $setTime = now();
-        $this->urlData = [
+        $urlData = [
             'name' => 'https://www.test.com',
             'created_at' => $setTime,
             'updated_at' => $setTime,
         ];
-        $this->id = DB::table('urls')->insertGetId($this->urlData);
+        $this->id = DB::table('urls')->insertGetId($urlData);
     }
 
     public function testUrlsRoot(): void
@@ -35,9 +35,13 @@ class UrlTest extends TestCase
 
     public function testUrlsShow(): void
     {
+        $urlDataTest = [
+            'id' => $this->id,
+            'name' => 'https://www.test.com',
+        ];
         $response = $this->get(route('urls.show', $this->id));
         $response->assertOk();
-        $this->assertDatabaseHas('urls', $this->urlData);
+        $this->assertDatabaseHas('urls', $urlDataTest);
     }
 
     public function testInvalidUrlShow(): void
