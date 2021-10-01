@@ -48,12 +48,12 @@ Route::post('/urls', function (Request $request): object {
         ['updated_at' => $updated],
     );
     $id = DB::table('urls')->where('name', $name)->value('id');
-    return redirect()->route('url.show', ['id' => $id]);
+    return redirect()->route('urls.show', ['id' => $id]);
 })->name('urls.store');
 
 Route::get('/urls', function (): string {
-    $urls = app('db')->table('urls')->orderBy('id')->paginate(15);
-    $lastChecks = app('db')->table('url_checks')
+    $urls = DB::table('urls')->orderBy('id')->paginate(15);
+    $lastChecks = DB::table('url_checks')
         ->distinct('url_id')
         ->orderBy('url_id')
         ->latest()
@@ -71,7 +71,7 @@ Route::get('/urls/{id}', function ($id): string {
     $urlCheck = DB::table('url_checks')->where('url_id', $id)->orderBy('created_at', 'desc')->get();
     $urlCheck = collect($urlCheck)->toArray();
     return view('url', compact('url', 'urlCheck'));
-})->name('url.show');
+})->name('urls.show');
 
 Route::post('/urls/{id}/checks', function ($id): object {
     $name = DB::table('urls')->where('id', $id)->value('name');
@@ -79,7 +79,7 @@ Route::post('/urls/{id}/checks', function ($id): object {
     $errors = [];
     try {
         $response = Http::get($name);
-    } catch (Throwable $e) {
+    } catch (HttpClientException $e) {
         report($e);
         $errors['alert'] = $e->getMessage();
         return redirect()->route('url.show', ['id' => $id])->withErrors($errors)->withInput();
@@ -100,5 +100,5 @@ Route::post('/urls/{id}/checks', function ($id): object {
         ]
     );
     flash('Страница успешно проверена')->success();
-    return redirect()->route('url.show', ['id' => $id]);
-})->name('url.checks');
+    return redirect()->route('urls.show', ['id' => $id]);
+})->name('urls.checks');

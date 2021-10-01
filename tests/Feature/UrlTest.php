@@ -13,12 +13,12 @@ class UrlTest extends TestCase
     {
         parent::setUp();
         $setTime = now();
-        $urlData = [
+        $this->urlData = [
             'name' => 'https://www.test.com',
             'created_at' => $setTime,
             'updated_at' => $setTime,
         ];
-        $this->id = DB::table('urls')->insertGetId($urlData);
+        $this->id = DB::table('urls')->insertGetId($this->urlData);
     }
 
     public function testUrlsRoot(): void
@@ -33,16 +33,38 @@ class UrlTest extends TestCase
         $response->assertOk();
     }
 
-    public function testUrlShow(): void
+    public function testUrlsShow(): void
     {
-        $response = $this->get(route('url.show', $this->id));
+        $response = $this->get(route('urls.show', $this->id));
         $response->assertOk();
+        $this->assertDatabaseHas('urls', $this->urlData);
     }
 
     public function testInvalidUrlShow(): void
     {
         $invalidId = [1000];
-        $response = $this->get(route('url.show', $invalidId));
+        $response = $this->get(route('urls.show', $invalidId));
         $response->assertNotFound();
+    }
+
+    public function testUrlsStore(): void
+    {
+        $urlData = [
+            'name' => 'https://www.test.com',
+        ];
+        $response = $this->post(route('urls.store', ['url' => $urlData]));
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect()->assertStatus(302);
+        $this->assertDatabaseHas('urls', $urlData);
+    }
+
+    public function testInvalidUrlsStore(): void
+    {
+        $newData = [
+            'id' => 100,
+            'name' => 'https://www.fake.com',
+        ];
+        $this->post(route('urls.store', ['url' => $newData]));
+        $this->assertDatabaseMissing('urls', $newData);
     }
 }

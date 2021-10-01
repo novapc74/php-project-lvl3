@@ -27,7 +27,7 @@ class UrlsChecksTest extends TestCase
         $parts = [__DIR__, '../fixtures', $fixtureName];
         $path = realpath(implode(DIRECTORY_SEPARATOR, $parts));
         if ($path == false) {
-            throw new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error. Path to fextures not found");
+            throw new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error: path to fextures not found");
         }
         return $path;
     }
@@ -36,6 +36,9 @@ class UrlsChecksTest extends TestCase
     {
         $pathToFixtures = $this->getFixtureFullPath('htmlTest.html');
         $body = (string)(file_get_contents($pathToFixtures));
+        if ($body == false) {
+            throw new \Exception("'/tests/Feature/UrlsChecksTest.php'  Error: the file is damaged or missing ");
+        }
         $checkData = [
             'url_id' => $this->id,
             'status_code' => '200',
@@ -46,30 +49,9 @@ class UrlsChecksTest extends TestCase
 
         Http::fake(fn ($request) => Http::response($body, 200));
 
-        $response = $this->post(route('url.checks', [$this->id]));
+        $response = $this->post(route('urls.checks', [$this->id]));
         $response->assertSessionHasNoErrors();
         $response->assertRedirect()->assertStatus(302);
         $this->assertDatabaseHas('url_checks', $checkData);
-    }
-
-    public function testUrlsStore(): void
-    {
-        $urlData = [
-            'name' => 'https://www.test.com',
-        ];
-        $response = $this->post(route('urls.store', ['url' => $urlData]));
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect()->assertStatus(302);
-        $this->assertDatabaseHas('urls', $urlData);
-    }
-
-    public function testInvalidUrlsStore(): void
-    {
-        $newData = [
-            'id' => 100,
-            'name' => 'https://www.fake.com',
-        ];
-        $this->post(route('urls.store', ['url' => $newData]));
-        $this->assertDatabaseMissing('urls', $newData);
     }
 }
